@@ -28,7 +28,7 @@ BLOCK_VERIFIERS_PUBLIC_KEY_LENGTH=64
 DPOPS_FEE=0
 DPOPS_MINIMUM_AMOUNT=0
 # XCASH_DPOPS_BLOCK_HEIGHT=521850
-XCASH_DPOPS_BLOCK_HEIGHT=740000
+XCASH_DPOPS_BLOCK_HEIGHT=760000
 
 # Latest versions
 MONGODB_LATEST_VERSION="mongodb-linux-aarch64-ubuntu1804-4.4.2"
@@ -475,7 +475,7 @@ function installation_settings()
     INSTALLATION_TYPE="Installation"
     print_installation_settings
   fi
-  if [ "$INSTALLATION_TYPE_SETTINGS" -eq "15" ]; then 
+  if [ "$INSTALLATION_TYPE_SETTINGS" -eq "16" ]; then 
     echo
     echo -e "${COLOR_PRINT_RED}WARNING: Old wallet, old block verifier key and old settings (service files)${END_COLOR_PRINT}"
     echo -e "${COLOR_PRINT_RED}will be overwritten if already existent! Please make a backup if required!${END_COLOR_PRINT}"
@@ -2187,11 +2187,8 @@ function install_or_update_blockchain()
   echo -e "${COLOR_PRINT_GREEN}Starting the Download${END_COLOR_PRINT}"
   wget -q --show-progress ${XCASH_BLOCKCHAIN_BOOTSTRAP_URL}
   echo -e "${COLOR_PRINT_GREEN}Starting Extraction${END_COLOR_PRINT}"
-  7z x xcash-blockchain.7z -bso0 -bse0 -o${XCASH_BLOCKCHAIN_INSTALLATION_DIR}
-  cd ${XCASH_BLOCKCHAIN_INSTALLATION_DIR}
-  cp -a .X-CASH/* ./
-  sudo rm -r .X-CASH
-  cd $HOME
+  sudo rm -r ${XCASH_BLOCKCHAIN_INSTALLATION_DIR} || true  
+  7z x xcash-blockchain.7z -bso0 -bse0 -o${XCASH_BLOCKCHAIN_INSTALLATION_DIR::-8}
   sudo rm xcash-blockchain.7z
   echo -e "${COLOR_PRINT_GREEN}Installing / Updating The BlockChain Completed${END_COLOR_PRINT}"
   echo
@@ -2215,11 +2212,8 @@ function install_blockchain()
     echo -e "${COLOR_PRINT_GREEN}Starting the Download${END_COLOR_PRINT}"
     wget -q --show-progress ${XCASH_BLOCKCHAIN_BOOTSTRAP_URL}
     echo -e "${COLOR_PRINT_GREEN}Starting Extraction${END_COLOR_PRINT}"
-    7z x xcash-blockchain.7z -bso0 -bse0 -o${XCASH_BLOCKCHAIN_INSTALLATION_DIR}
-    cd ${XCASH_BLOCKCHAIN_INSTALLATION_DIR}
-    cp -a .X-CASH/* ./
-    sudo rm -r .X-CASH
-    cd $HOME
+    sudo rm -r ${XCASH_BLOCKCHAIN_INSTALLATION_DIR} || true
+    7z x xcash-blockchain.7z -bso0 -bse0 -o${XCASH_BLOCKCHAIN_INSTALLATION_DIR::-8}
     sudo rm xcash-blockchain.7z
     echo -e "${COLOR_PRINT_GREEN}Installing The BlockChain Completed${END_COLOR_PRINT}"
     echo

@@ -99,8 +99,8 @@ RAM_CPU_RATIO_ALL_CPU_THREADS=4
 # Regex
 regex_XCASH_DPOPS_INSTALLATION_DIR="(^\/(.*?)\/$)|(^$)" # anything that starts with / and ends with / and does not contain a space
 regex_MNEMONIC_SEED="^\b([a-z]+\s+){24}\b([a-z]+)$" # 25 words exactly
-regex_DPOPS_FEE="\b(^[1-9]{1}[0-9]{0,1}.?[0-9]{0,6}$)\b$" # between 1 and 99 with up to 6 decimal places
-regex_DPOPS_MINIMUM_AMOUNT="\b(^[1-9]{1}[0-9]{4,6}$)\b$" # between 10000 and 10000000-1
+regex_DPOPS_FEE="\b(^[0-9]{1}[0-9]{0,1}.?[0-9]{0,6}$)\b$" # between 0 and 100 with up to 6 decimal places
+regex_DPOPS_MINIMUM_AMOUNT="\b(^[1-9]{1}[0-9]{4,6}$)\b$|^10000000$" # between 10000 and 10000000
 
 
 
@@ -2187,7 +2187,7 @@ function install_or_update_blockchain()
   echo -e "${COLOR_PRINT_GREEN}Starting the Download${END_COLOR_PRINT}"
   wget -q --show-progress ${XCASH_BLOCKCHAIN_BOOTSTRAP_URL}
   echo -e "${COLOR_PRINT_GREEN}Starting Extraction${END_COLOR_PRINT}"
-  sudo rm -r ${XCASH_BLOCKCHAIN_INSTALLATION_DIR} || true  
+  sudo rm -r ${XCASH_BLOCKCHAIN_INSTALLATION_DIR} &>/dev/null || true   
   7z x xcash-blockchain.7z -bso0 -bse0 -o${XCASH_BLOCKCHAIN_INSTALLATION_DIR::-8}
   sudo rm xcash-blockchain.7z
   echo -e "${COLOR_PRINT_GREEN}Installing / Updating The BlockChain Completed${END_COLOR_PRINT}"
@@ -2212,7 +2212,7 @@ function install_blockchain()
     echo -e "${COLOR_PRINT_GREEN}Starting the Download${END_COLOR_PRINT}"
     wget -q --show-progress ${XCASH_BLOCKCHAIN_BOOTSTRAP_URL}
     echo -e "${COLOR_PRINT_GREEN}Starting Extraction${END_COLOR_PRINT}"
-    sudo rm -r ${XCASH_BLOCKCHAIN_INSTALLATION_DIR} || true
+    sudo rm -r ${XCASH_BLOCKCHAIN_INSTALLATION_DIR} &>/dev/null || true
     7z x xcash-blockchain.7z -bso0 -bse0 -o${XCASH_BLOCKCHAIN_INSTALLATION_DIR::-8}
     sudo rm xcash-blockchain.7z
     echo -e "${COLOR_PRINT_GREEN}Installing The BlockChain Completed${END_COLOR_PRINT}"
@@ -2493,3 +2493,5 @@ elif [ "$INSTALLATION_TYPE_SETTINGS" -eq "18" ]; then
 elif [ "$INSTALLATION_TYPE_SETTINGS" -eq "19" ]; then
   backup
 fi
+
++

@@ -2493,5 +2493,3 @@ elif [ "$INSTALLATION_TYPE_SETTINGS" -eq "18" ]; then
 elif [ "$INSTALLATION_TYPE_SETTINGS" -eq "19" ]; then
   backup
 fi
-
-+

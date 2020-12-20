@@ -1184,7 +1184,6 @@ function install_shared_delegates_website()
   install_npm_global_packages
   download_shared_delegate_website
   install_shared_delegates_website_npm_packages
-  build_shared_delegates_website
   source ~/.profile || true
   echo
   echo

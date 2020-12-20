@@ -779,7 +779,7 @@ function download_xcash()
 
 function build_xcash()
 {
-  echo -ne "${COLOR_PRINT_YELLOW}Building X-CASH (This Might Take A While)${END_COLOR_PRINT}"
+  echo -ne "${COLOR_PRINT_YELLOW}Building X-CASH (This May Take An Hour Or Longe)${END_COLOR_PRINT}"
   cd "${XCASH_DIR}"
   git checkout --quiet ${XCASH_CORE_BRANCH}
   if [ "$RAM_CPU_RATIO" -ge "$RAM_CPU_RATIO_ALL_CPU_THREADS" ]; then

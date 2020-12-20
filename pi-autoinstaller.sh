@@ -793,7 +793,7 @@ function build_xcash()
         make release &>/dev/null
     fi
   fi
-  echo -ne "\r${COLOR_PRINT_GREEN}Building X-CASH (This Might Take A While)${END_COLOR_PRINT}"
+  echo -ne "\r${COLOR_PRINT_GREEN}Building X-CASH (This May Take An Hour Or Longer)${END_COLOR_PRINT}"
   echo
 }
 
@@ -1183,7 +1183,6 @@ function install_shared_delegates_website()
   update_npm
   install_npm_global_packages
   download_shared_delegate_website
-  install_shared_delegates_website_npm_packages
   source ~/.profile || true
   echo
   echo

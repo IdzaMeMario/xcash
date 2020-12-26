@@ -1,6 +1,6 @@
 # xcash
 
-Workis but does not install the shared delegate website on the server. everything else works though.
+Works but does not install the shared delegate website on the server. everything else works though.
 
 you will need to open at least one or two ports on the router for the delegate to communicate
 

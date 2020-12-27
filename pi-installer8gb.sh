@@ -34,7 +34,7 @@ XCASH_DPOPS_BLOCK_HEIGHT=760000
 MONGODB_LATEST_VERSION="mongodb-linux-aarch64-ubuntu1804-4.4.2"
 MONGODB_TOOLS_LATEST_VERSION="mongodb-database-tools-ubuntu1804-x86_64-100.2.1"
 MONGOC_DRIVER_LATEST_VERSION="mongo-c-driver-1.17.0"
-NODEJS_LATEST_VERSION="node-v14.15.3-linux-arm64"
+NODEJS_LATEST_VERSION="node-v14.10.1-linux-arm64"
 
 # Settings
 XCASH_URL="https://github.com/X-CASH-official/xcash-core.git"
@@ -50,7 +50,7 @@ XCASH_DPOPS_SHARED_DELEGATE_FOLDER_DIR=""
 SHARED_DELEGATES_WEBSITE_URL="https://github.com/X-CASH-official/delegates-pool-website.git"
 SHARED_DELEGATES_WEBSITE_DIR=""
 SSH_PORT_NUMBER=22
-NODEJS_URL="https://nodejs.org/dist/v14.15.3/node-v14.15.3-linux-arm64.tar.xz"
+NODEJS_URL="https://nodejs.org/dist/v14.10.1/node-v14.10.1-linux-arm64.tar.xz"
 NODEJS_DIR=""
 NODEJS_CURRENT_VERSION=""
 MONGODB_URL="https://fastdl.mongodb.org/linux/${MONGODB_LATEST_VERSION}.tgz"

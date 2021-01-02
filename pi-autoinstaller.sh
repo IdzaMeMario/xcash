@@ -30,7 +30,7 @@ DPOPS_MINIMUM_AMOUNT=0
 XCASH_DPOPS_BLOCK_HEIGHT=800000
 
 # Latest versions
-MONGODB_LATEST_VERSION="mongodb-linux-aarch64-ubuntu1804-4.4.1"
+MONGODB_LATEST_VERSION="mongodb-linux-aarch64-ubuntu2004-4.4.1"
 MONGODB_TOOLS_LATEST_VERSION="mongodb-database-tools-ubuntu2004-arm64-100.2.1"
 MONGOC_DRIVER_LATEST_VERSION="mongo-c-driver-1.17.0"
 NODEJS_LATEST_VERSION="node-v14.10.1-linux-arm64"
@@ -508,16 +508,16 @@ function get_current_xcash_wallet_data()
   echo -ne "${COLOR_PRINT_YELLOW}Refreshing and Getting Current X-CASH Wallet Data${END_COLOR_PRINT}"
 
   sudo systemctl stop xcash-daemon &>/dev/null
-  sleep 10s
+  sleep 30s
   sudo systemctl start xcash-daemon &>/dev/null
-  sleep 20s
+  sleep 30s
 
   screen -dmS XCASH_RPC_Wallet "${XCASH_DIR}"build/release/bin/xcash-wallet-rpc --wallet-file "${XCASH_WALLET_DIR}"delegate-wallet --password "${WALLET_PASSWORD}" --rpc-bind-port 18288 --confirm-external-bind --disable-rpc-login --trusted-daemon --log-file "${XCASH_LOGS_DIR}"xcash-wallet-rpc.log
-  sleep 10s
+  sleep 30s
   
    while
     data=$(curl -s -X POST http://127.0.0.1:18288/json_rpc -d '{"jsonrpc":"2.0","id":"0","method":"get_address"}' -H 'Content-Type: application/json') 
-    sleep 10s
+    sleep 30s
     [[ "$data" == "" ]]
   do true; done
 
@@ -529,10 +529,10 @@ function get_current_xcash_wallet_data()
   PUBLIC_ADDRESS=${PUBLIC_ADDRESS%?}
 
   curl -s -X POST http://127.0.0.1:18288/json_rpc -d '{"jsonrpc":"2.0","id":"0","method":"stop_wallet"}' -H 'Content-Type: application/json' &>/dev/null
-  sleep 10s
+  sleep 30s
   
   sudo systemctl stop xcash-daemon &>/dev/null
-  sleep 10s
+  sleep 30s
   
   echo -ne "\r${COLOR_PRINT_GREEN}Refreshing and Getting Current X-CASH Wallet Data${END_COLOR_PRINT}"
   echo
@@ -1208,7 +1208,7 @@ function get_installation_directory()
   SHARED_DELEGATES_WEBSITE_DIR=${XCASH_DPOPS_INSTALLATION_DIR}delegates-pool-website/
   NODEJS_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "node-*-linux-arm64" -print)/
   MONGODB_INSTALLATION_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -path "*/data/db" -print)/
-  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu1804-*" -print)/
+  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu2004-*" -print)/
   MONGOC_DRIVER_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongo-c-driver-*" -print)/
   echo -ne "\r${COLOR_PRINT_GREEN}Getting Installation Directories${END_COLOR_PRINT}"
   echo
@@ -1244,7 +1244,7 @@ function get_dependencies_current_version()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Getting Dependencies Current Versions${END_COLOR_PRINT}"
   NODEJS_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "node-*-linux-arm64" -exec basename {} \;)
-  MONGODB_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu1804-*" -exec basename {} \;)
+  MONGODB_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu2004-*" -exec basename {} \;)
   MONGOC_DRIVER_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongo-c-driver-*" -exec basename {} \;)
   echo -ne "\r${COLOR_PRINT_GREEN}Getting Dependencies Current Versions${END_COLOR_PRINT}"
   echo
@@ -1367,13 +1367,13 @@ function update_mongodb()
   wget -q ${MONGODB_URL}
   tar -xf mongodb-linux-aarch64-*.tgz &>/dev/null
   sudo rm mongodb-linux-aarch64-*.tgz &>/dev/null
-  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu1804-*" -print)/
+  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu2004-*" -print)/
   sudo chown -R "$USER":"$USER" ${MONGODB_DIR}
   update_systemd_service_files
   sudo bash -c "echo '${SYSTEMD_SERVICE_FILE_MONGODB}' > /lib/systemd/system/mongodb.service"
   sed_services 's/\r$//g' /lib/systemd/system/mongodb.service
   sudo systemctl daemon-reload
-  sudo sed '/mongodb-linux-aarch64-ubuntu1804-/d' -i "${HOME}"/.profile
+  sudo sed '/mongodb-linux-aarch64-ubuntu2004-/d' -i "${HOME}"/.profile
   sudo sed '/^[[:space:]]*$/d' -i "${HOME}"/.profile
   echo -ne "\nexport PATH=${MONGODB_DIR}bin:" >> "${HOME}"/.profile 
   echo -ne '$PATH' >> "${HOME}"/.profile
@@ -1785,9 +1785,9 @@ function uninstall()
   # Restart the X-CASH Daemon and stop the X-CASH Wallet RPC
   echo -ne "${COLOR_PRINT_YELLOW}Shutting Down X-CASH Wallet Systemd Service File and Restarting XCASH Daemon Systemd Service File${END_COLOR_PRINT}"
   sudo systemctl stop xcash-daemon &>/dev/null
-  sleep 10s
+  sleep 30s
   sudo systemctl stop xcash-rpc-wallet &>/dev/null
-  sleep 10s
+  sleep 30s
   echo -ne "\r${COLOR_PRINT_GREEN}Shutting Down X-CASH Wallet Systemd Service File and Restarting XCASH Daemon Systemd Service File${END_COLOR_PRINT}"
   echo
   
@@ -1833,7 +1833,7 @@ function uninstall()
 
   # Update profile
   echo -ne "${COLOR_PRINT_YELLOW}Updating Profile${END_COLOR_PRINT}"
-  sudo sed '/mongodb-linux-aarch64-ubuntu1804-/d' -i "${HOME}"/.profile
+  sudo sed '/mongodb-linux-aarch64-ubuntu2004-/d' -i "${HOME}"/.profile
   sudo sed '/node-v/d' -i "${HOME}"/.profile
   sudo sed '/PATH=\/bin:/d' -i "${HOME}"/.profile
   sudo sed '/^[[:space:]]*$/d' -i "${HOME}"/.profile

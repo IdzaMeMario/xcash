@@ -1034,9 +1034,9 @@ function create_xcash_wallet()
 
   echo -ne "${COLOR_PRINT_YELLOW}Starting local daemon${END_COLOR_PRINT}"
   sudo systemctl stop xcash-daemon &>/dev/null
-  sleep 10s
+  sleep 30s
   sudo systemctl start xcash-daemon &>/dev/null
-  sleep 20s
+  sleep 30s
   echo -ne "\r${COLOR_PRINT_GREEN}Starting local daemon${END_COLOR_PRINT}"
   echo
 
@@ -1047,7 +1047,7 @@ function create_xcash_wallet()
 
   echo -ne "${COLOR_PRINT_YELLOW}Stopping local daemon${END_COLOR_PRINT}"
   sudo systemctl stop xcash-daemon &>/dev/null
-  sleep 10s
+  sleep 30s
   echo -ne "\r${COLOR_PRINT_GREEN}Stopping local daemon${END_COLOR_PRINT}"
   echo
 }
@@ -1063,9 +1063,9 @@ function import_xcash_wallet()
 
   echo -ne "${COLOR_PRINT_YELLOW}Starting local daemon${END_COLOR_PRINT}"
   sudo systemctl stop xcash-daemon &>/dev/null
-  sleep 10s
+  sleep 30s
   sudo systemctl start xcash-daemon &>/dev/null
-  sleep 20s
+  sleep 30s
   echo -ne "\r${COLOR_PRINT_GREEN}Starting local daemon${END_COLOR_PRINT}"
   echo
   
@@ -1076,7 +1076,7 @@ function import_xcash_wallet()
 
   echo -ne "${COLOR_PRINT_YELLOW}Stopping local daemon${END_COLOR_PRINT}"
   sudo systemctl stop xcash-daemon &>/dev/null
-  sleep 10s
+  sleep 30s
   echo -ne "\r${COLOR_PRINT_GREEN}Stopping local daemon${END_COLOR_PRINT}"
   echo
   

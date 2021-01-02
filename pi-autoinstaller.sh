@@ -30,7 +30,7 @@ DPOPS_MINIMUM_AMOUNT=0
 XCASH_DPOPS_BLOCK_HEIGHT=800000
 
 # Latest versions
-MONGODB_LATEST_VERSION="mongodb-linux-aarch64-ubuntu2004-4.4.1"
+MONGODB_LATEST_VERSION="mongodb-linux-aarch64-ubuntu1804-4.4.1"
 MONGODB_TOOLS_LATEST_VERSION="mongodb-database-tools-ubuntu2004-arm64-100.2.1"
 MONGOC_DRIVER_LATEST_VERSION="mongo-c-driver-1.17.0"
 NODEJS_LATEST_VERSION="node-v14.10.1-linux-arm64"
@@ -1208,7 +1208,7 @@ function get_installation_directory()
   SHARED_DELEGATES_WEBSITE_DIR=${XCASH_DPOPS_INSTALLATION_DIR}delegates-pool-website/
   NODEJS_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "node-*-linux-arm64" -print)/
   MONGODB_INSTALLATION_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -path "*/data/db" -print)/
-  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu2004-*" -print)/
+  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu1804-*" -print)/
   MONGOC_DRIVER_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongo-c-driver-*" -print)/
   echo -ne "\r${COLOR_PRINT_GREEN}Getting Installation Directories${END_COLOR_PRINT}"
   echo
@@ -1244,7 +1244,7 @@ function get_dependencies_current_version()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Getting Dependencies Current Versions${END_COLOR_PRINT}"
   NODEJS_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "node-*-linux-arm64" -exec basename {} \;)
-  MONGODB_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu2004-*" -exec basename {} \;)
+  MONGODB_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu1804-*" -exec basename {} \;)
   MONGOC_DRIVER_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongo-c-driver-*" -exec basename {} \;)
   echo -ne "\r${COLOR_PRINT_GREEN}Getting Dependencies Current Versions${END_COLOR_PRINT}"
   echo
@@ -1367,13 +1367,13 @@ function update_mongodb()
   wget -q ${MONGODB_URL}
   tar -xf mongodb-linux-aarch64-*.tgz &>/dev/null
   sudo rm mongodb-linux-aarch64-*.tgz &>/dev/null
-  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu2004-*" -print)/
+  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu1804-*" -print)/
   sudo chown -R "$USER":"$USER" ${MONGODB_DIR}
   update_systemd_service_files
   sudo bash -c "echo '${SYSTEMD_SERVICE_FILE_MONGODB}' > /lib/systemd/system/mongodb.service"
   sed_services 's/\r$//g' /lib/systemd/system/mongodb.service
   sudo systemctl daemon-reload
-  sudo sed '/mongodb-linux-aarch64-ubuntu2004-/d' -i "${HOME}"/.profile
+  sudo sed '/mongodb-linux-aarch64-ubuntu1804-/d' -i "${HOME}"/.profile
   sudo sed '/^[[:space:]]*$/d' -i "${HOME}"/.profile
   echo -ne "\nexport PATH=${MONGODB_DIR}bin:" >> "${HOME}"/.profile 
   echo -ne '$PATH' >> "${HOME}"/.profile
@@ -1833,7 +1833,7 @@ function uninstall()
 
   # Update profile
   echo -ne "${COLOR_PRINT_YELLOW}Updating Profile${END_COLOR_PRINT}"
-  sudo sed '/mongodb-linux-aarch64-ubuntu2004-/d' -i "${HOME}"/.profile
+  sudo sed '/mongodb-linux-aarch64-ubuntu1804-/d' -i "${HOME}"/.profile
   sudo sed '/node-v/d' -i "${HOME}"/.profile
   sudo sed '/PATH=\/bin:/d' -i "${HOME}"/.profile
   sudo sed '/^[[:space:]]*$/d' -i "${HOME}"/.profile

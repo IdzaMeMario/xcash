@@ -30,7 +30,7 @@ DPOPS_MINIMUM_AMOUNT=0
 XCASH_DPOPS_BLOCK_HEIGHT=800000
 
 # Latest versions
-MONGODB_LATEST_VERSION="mongodb-linux-aarch64-ubuntu1804-4.4.2"
+MONGODB_LATEST_VERSION="mongodb-linux-aarch64-ubuntu1804-4.4.1"
 MONGODB_TOOLS_LATEST_VERSION="mongodb-database-tools-ubuntu2004-arm64-100.2.1"
 MONGOC_DRIVER_LATEST_VERSION="mongo-c-driver-1.17.0"
 NODEJS_LATEST_VERSION="node-v14.10.1-linux-arm64"
@@ -49,7 +49,7 @@ XCASH_DPOPS_SHARED_DELEGATE_FOLDER_DIR=""
 SHARED_DELEGATES_WEBSITE_URL="https://github.com/X-CASH-official/delegates-pool-website.git"
 SHARED_DELEGATES_WEBSITE_DIR=""
 SSH_PORT_NUMBER=22
-NODEJS_URL="https://nodejs.org/dist/${NODEJS_LATEST_VERSION:5:8}/${NODEJS_LATEST_VERSION}.tar.xz"
+NODEJS_URL="https://nodejs.org/dist/v14.10.1/node-v14.10.1-linux-arm64.tar.xz"
 NODEJS_DIR=""
 NODEJS_CURRENT_VERSION=""
 MONGODB_URL="https://fastdl.mongodb.org/linux/${MONGODB_LATEST_VERSION}.tgz"
@@ -911,7 +911,7 @@ function install_mongoc_driver()
   mkdir cmake-build &>/dev/null
   cd cmake-build &>/dev/null
   sudo cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DCMAKE_BUILD_TYPE=Release .. &>/dev/null
-  sudo make -j "${CPU_THREADS}" &>/dev/null
+  sudo make &>/dev/null
   sudo make install &>/dev/null
   sudo ldconfig
   echo -ne "\r${COLOR_PRINT_GREEN}Installing MongoC Driver${END_COLOR_PRINT}"
@@ -1398,7 +1398,7 @@ function update_mongoc_driver()
   mkdir cmake-build
   cd cmake-build
   cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DCMAKE_BUILD_TYPE=Release .. &>/dev/null
-  sudo make -j "${CPU_THREADS}" &>/dev/null
+  sudo make &>/dev/null
   sudo make install &>/dev/null
   sudo ldconfig
   MONGOC_DRIVER_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongo-c-driver-*" -print)/

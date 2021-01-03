@@ -30,7 +30,7 @@ DPOPS_MINIMUM_AMOUNT=0
 XCASH_DPOPS_BLOCK_HEIGHT=800000
 
 # Latest versions
-MONGODB_LATEST_VERSION="mongodb-linux-aarch64-ubuntu1804-4.4.1"
+MONGODB_LATEST_VERSION="mongodb-linux-aarch64-ubuntu1804-4.4.2"
 MONGODB_TOOLS_LATEST_VERSION="mongodb-database-tools-ubuntu2004-arm64-100.2.1"
 MONGOC_DRIVER_LATEST_VERSION="mongo-c-driver-1.17.0"
 NODEJS_LATEST_VERSION="node-v14.10.1-linux-arm64"

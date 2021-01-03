@@ -1320,13 +1320,13 @@ function update_xcash_dpops()
     git pull --quiet
     if [ "$RAM_CPU_RATIO" -ge "$RAM_CPU_RATIO_ALL_CPU_THREADS" ]; then
       echo "y" | make clean &>/dev/null
-      make release &>/dev/null
+      make release -j "${CPU_THREADS}" &>/dev/null
     else
       echo "y" | make clean &>/dev/null
       if [ "$RAM_CPU_RATIO" -eq 0 ]; then
           make release &>/dev/null
       else
-          make release &>/dev/null
+          make release -j $((CPU_THREADS / 2)) &>/dev/null
       fi
     fi
   fi
@@ -1398,7 +1398,7 @@ function update_mongoc_driver()
   mkdir cmake-build
   cd cmake-build
   cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DCMAKE_BUILD_TYPE=Release .. &>/dev/null
-  sudo make &>/dev/null
+  sudo make -j "${CPU_THREADS}" &>/dev/null
   sudo make install &>/dev/null
   sudo ldconfig
   MONGOC_DRIVER_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongo-c-driver-*" -print)/

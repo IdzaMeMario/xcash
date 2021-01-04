@@ -745,6 +745,7 @@ function install_packages()
         ((i=i+1))
     done
     echo -ne "${COLOR_PRINT_YELLOW}Installing Packages (This Might Take A While)${END_COLOR_PRINT}"
+    sudo apt install python2 -y &>/dev/null
     sudo apt install ${XCASH_DPOPS_PACKAGES} -y &>/dev/null
     build_libgtest
     echo -ne "\r${COLOR_PRINT_GREEN}Installing Packages (This Might Take A While)${END_COLOR_PRINT}"

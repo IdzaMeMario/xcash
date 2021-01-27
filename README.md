@@ -7,7 +7,7 @@ Ported for ARM processor installation from Zacks autoinstaller script
 
 auto installer for the xcash-dpops delegate
 
-At this point I can only reccomend doing this on a PI4 with 8gb memory or more
+At this point I can only reccomend doing this on a PI4. No other models have been tested and likely wont work well if at all.
 
 
 

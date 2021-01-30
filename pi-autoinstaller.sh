@@ -32,7 +32,7 @@ XCASH_DPOPS_BLOCK_HEIGHT=800000
 # Latest versions
 MONGODB_LATEST_VERSION="mongodb-linux-aarch64-ubuntu1804-4.4.1"
 MONGODB_TOOLS_LATEST_VERSION="mongodb-database-tools-ubuntu2004-arm64-100.2.1"
-MONGOC_DRIVER_LATEST_VERSION="mongo-c-driver-1.17.0"
+MONGOC_DRIVER_LATEST_VERSION="mongo-c-driver-1.1https://discord.com/channels/470575102203920395/4752425624883691527.0"
 NODEJS_LATEST_VERSION="node-v14.10.1-linux-arm64"
 
 # Settings
@@ -2397,9 +2397,9 @@ function backup()
   if [ "${SHARED_DELEGATE^^}" == "YES" ]; then
     cd ~
     systemctl start mongodb
-    mongodump --db XCASH_PROOF_OF_STAKE_DELEGATES &>/dev/null
-    7z a shared_delegates_database_backup.7z dump &>/dev/null
-    sudo rm -r dump &>/dev/null  
+    mongodump --db XCASH_PROOF_OF_STAKE_DELEGATES &>/dev/null || true
+    7z a shared_delegates_database_backup.7z dump &>/dev/null || true
+    sudo rm -r dump &>/dev/null || true
   fi
 
   echo
@@ -2410,7 +2410,6 @@ function backup()
 
   # Display the decentralized database backup data
   if [ "${SHARED_DELEGATE^^}" == "YES" ]; then
-    ls ~
     echo
     echo
     echo -e "${COLOR_PRINT_YELLOW}After running the autoinstaller on a different machine run this command to import your shared delegates database (place the shared_delegates_database_backup.7z in the $HOME directory)${END_COLOR_PRINT}" 

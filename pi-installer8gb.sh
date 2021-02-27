@@ -1151,7 +1151,7 @@ function install_shared_delegates_website_npm_packages()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Updating node_modules${END_COLOR_PRINT}"
   cd "${SHARED_DELEGATES_WEBSITE_DIR}"
-  npm update &>/dev/null
+  npm update --force &>/dev/null
   echo -ne "\r${COLOR_PRINT_GREEN}Updating node_modules${END_COLOR_PRINT}"
   echo
 }
@@ -1347,7 +1347,7 @@ function update_shared_delegates_website()
   if [ "$data" == "0" ]; then
     git reset --hard HEAD --quiet
     git pull --quiet
-    npm update &>/dev/null
+    npm update --force &>/dev/null
     source ~/.profile || true
     npm run build &>/dev/null
     cd dist

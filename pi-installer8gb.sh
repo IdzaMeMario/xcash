@@ -567,13 +567,6 @@ function enable_service_files_at_startup()
   echo -ne "\r${COLOR_PRINT_GREEN}Enabling services to autostart on reboot${END_COLOR_PRINT}"
 }
 
-
-
-
-
-
-
-
 function check_if_solo_node()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Checking If Solo Node${END_COLOR_PRINT}"

@@ -542,12 +542,12 @@ function get_current_xcash_wallet_data()
 function start_systemd_service_files()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Starting Systemd Service Files${END_COLOR_PRINT}"
-  sudo systemctl start mongodb &>/dev/null
-  sudo systemctl start xcash-daemon &>/dev/null
+  sudo systemctl start mongodb
+  sudo systemctl start xcash-daemon
   sleep 30s
-  sudo systemctl start xcash-rpc-wallet &>/dev/null
+  sudo systemctl start xcash-rpc-wallet
   sleep 30s
-  sudo systemctl start xcash-dpops &>/dev/null
+  sudo systemctl start xcash-dpops
   echo -ne "\r${COLOR_PRINT_GREEN}Starting Systemd Service Files${END_COLOR_PRINT}"
   echo
 }
@@ -563,7 +563,7 @@ function stop_systemd_service_files()
 function enable_service_files_at_startup()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Enabling services to autostart on reboot${END_COLOR_PRINT}"
-  sudo systemctl enable mongodb.service xcash-daemon.service xcash-rpc-wallet.timer xcash-dpops.timer 2> /dev/null
+  sudo systemctl enable mongodb.service xcash-daemon.service xcash-rpc-wallet.timer xcash-dpops.timer 2>
   echo -ne "\r${COLOR_PRINT_GREEN}Enabling services to autostart on reboot${END_COLOR_PRINT}"
 }
 
@@ -725,7 +725,7 @@ function update_packages_list()
         ((i=i+1))
     done
     echo -ne "${COLOR_PRINT_YELLOW}Updating Packages List${END_COLOR_PRINT}"
-    sudo apt update -y &>/dev/null
+    sudo apt update -y
     echo -ne "\r${COLOR_PRINT_GREEN}Updating Packages List${END_COLOR_PRINT}"
     echo
 }
@@ -745,8 +745,8 @@ function install_packages()
         ((i=i+1))
     done
     echo -ne "${COLOR_PRINT_YELLOW}Installing Packages (This Might Take A While)${END_COLOR_PRINT}"
-    sudo apt install python2 -y &>/dev/null
-    sudo apt install ${XCASH_DPOPS_PACKAGES} -y &>/dev/null
+    sudo apt install python2 -y
+    sudo apt install ${XCASH_DPOPS_PACKAGES} -y
     build_libgtest
     echo -ne "\r${COLOR_PRINT_GREEN}Installing Packages (This Might Take A While)${END_COLOR_PRINT}"
     echo
@@ -754,13 +754,13 @@ function install_packages()
 
 function build_libgtest()
 {
-  cd /usr/src/gtest &>/dev/null
+  cd /usr/src/gtest
   sudo cmake . &>/dev/null
   sudo make &>/dev/null
   if [ ! -f /usr/src/gtest/lib/libgtest.a ]; then
-    sudo mv libg* /usr/lib/ &>/dev/null
+    sudo mv libg* /usr/lib/
   else
-    sudo mv lib/libg* /usr/lib/ &>/dev/null
+    sudo mv lib/libg* /usr/lib/
   fi
 }
 
@@ -783,14 +783,14 @@ function build_xcash()
   cd "${XCASH_DIR}"
   git checkout --quiet ${XCASH_CORE_BRANCH}
   if [ "$RAM_CPU_RATIO" -ge "$RAM_CPU_RATIO_ALL_CPU_THREADS" ]; then
-    echo "y" | make clean &>/dev/null
-    make release -j "${CPU_THREADS}" &>/dev/null
+    echo "y" | make clean
+    make release -j "${CPU_THREADS}"
   else
-    echo "y" | make clean &>/dev/null
+    echo "y" | make clean
     if [ "$RAM_CPU_RATIO" -eq 0 ]; then
-        make release &>/dev/null
+        make release
     else
-        make release -j $((CPU_THREADS / 2)) &>/dev/null
+        make release -j $((CPU_THREADS / 2))
     fi
   fi
   echo -ne "\r${COLOR_PRINT_GREEN}Building X-CASH (This May Take An Hour Or Longer)${END_COLOR_PRINT}"
@@ -877,8 +877,8 @@ function install_mongodb()
   echo -ne "${COLOR_PRINT_YELLOW}Installing MongoDB${END_COLOR_PRINT}"
   cd "${XCASH_DPOPS_INSTALLATION_DIR}"
   wget -q ${MONGODB_URL}
-  tar -xf mongodb-linux-aarch64-*.tgz &>/dev/null
-  sudo rm mongodb-linux-aarch64-*.tgz &>/dev/null
+  tar -xf mongodb-linux-aarch64-*.tgz
+  sudo rm mongodb-linux-aarch64-*.tgz
   sudo chown -R "$USER":"$USER" ${MONGODB_DIR}
   echo -ne "\nexport PATH=${MONGODB_DIR}bin:" >> "${HOME}"/.profile 
   echo -ne '$PATH' >> "${HOME}"/.profile
@@ -892,8 +892,8 @@ function install_mongodb_tools()
   echo -ne "${COLOR_PRINT_YELLOW}Installing MongoDB Tools${END_COLOR_PRINT}"
   cd "${XCASH_DPOPS_INSTALLATION_DIR}"mongodb-linux-aarch64-*/bin/
   wget -q ${MONGODB_TOOLS_URL}
-  tar -xf mongodb-database-tools-*.tgz &>/dev/null
-  sudo rm mongodb-database-tools-*.tgz &>/dev/null
+  tar -xf mongodb-database-tools-*.tgz
+  sudo rm mongodb-database-tools-*.tgz
   cp -a mongodb-database-tools-*/bin/* ./
   sudo rm -rf mongodb-database-tools-*
   echo -ne "\r${COLOR_PRINT_GREEN}Installing MongoDB Tools${END_COLOR_PRINT}"
@@ -905,15 +905,15 @@ function install_mongoc_driver()
   echo -ne "${COLOR_PRINT_YELLOW}Installing MongoC Driver${END_COLOR_PRINT}"
   cd "${XCASH_DPOPS_INSTALLATION_DIR}"
   wget -q ${MONGOC_DRIVER_URL}
-  tar -xf mongo-c-driver-*.tar.gz &>/dev/null
-  sudo rm mongo-c-driver-*.tar.gz &>/dev/null
+  tar -xf mongo-c-driver-*.tar.gz
+  sudo rm mongo-c-driver-*.tar.gz
   sudo chown -R "$USER":"$USER" mongo-c-driver-*
   cd mongo-c-driver-*
-  mkdir cmake-build &>/dev/null
-  cd cmake-build &>/dev/null
-  sudo cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DCMAKE_BUILD_TYPE=Release .. &>/dev/null
+  mkdir cmake-build
+  cd cmake-build
+  sudo cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DCMAKE_BUILD_TYPE=Release ..
   sudo make &>/dev/null
-  sudo make install &>/dev/null
+  sudo make install
   sudo ldconfig
   echo -ne "\r${COLOR_PRINT_GREEN}Installing MongoC Driver${END_COLOR_PRINT}"
   echo
@@ -933,14 +933,14 @@ function build_xcash_dpops()
   echo -ne "${COLOR_PRINT_YELLOW}Building xcash-dpops${END_COLOR_PRINT}"
   cd "${XCASH_DPOPS_DIR}"
   if [ "$RAM_CPU_RATIO" -ge "$RAM_CPU_RATIO_ALL_CPU_THREADS" ]; then
-    echo "y" | make clean &>/dev/null
-     make release -j "${CPU_THREADS}" &>/dev/null
+    echo "y" | make clean
+     make release -j "${CPU_THREADS}"
   else
-    echo "y" | make clean &>/dev/null
+    echo "y" | make clean
     if [ "$RAM_CPU_RATIO" -eq 0 ]; then
-        make release &>/dev/null
+        make release
     else
-        make release -j $((CPU_THREADS / 2)) &>/dev/null
+        make release -j $((CPU_THREADS / 2))
     fi
   fi
   echo -ne "\r${COLOR_PRINT_GREEN}Building xcash-dpops${END_COLOR_PRINT}"
@@ -1031,12 +1031,12 @@ function create_xcash_wallet()
   echo -e "${COLOR_PRINT_GREEN}############################################################${END_COLOR_PRINT}"
 
   cd "${XCASH_DPOPS_INSTALLATION_DIR}"
-  sudo rm -f "${XCASH_DPOPS_INSTALLATION_DIR}"xcash-wallets/delegate-wallet* 2&> /dev/null
+  sudo rm -f "${XCASH_DPOPS_INSTALLATION_DIR}"xcash-wallets/delegate-wallet* 2&>
 
   echo -ne "${COLOR_PRINT_YELLOW}Starting local daemon${END_COLOR_PRINT}"
-  sudo systemctl stop xcash-daemon &>/dev/null
+  sudo systemctl stop xcash-daemon
   sleep 10s
-  sudo systemctl start xcash-daemon &>/dev/null
+  sudo systemctl start xcash-daemon
   sleep 20s
   echo -ne "\r${COLOR_PRINT_GREEN}Starting local daemon${END_COLOR_PRINT}"
   echo
@@ -1047,7 +1047,7 @@ function create_xcash_wallet()
   echo -e "${COLOR_PRINT_GREEN}Wallet Refresh Completed${END_COLOR_PRINT}"
 
   echo -ne "${COLOR_PRINT_YELLOW}Stopping local daemon${END_COLOR_PRINT}"
-  sudo systemctl stop xcash-daemon &>/dev/null
+  sudo systemctl stop xcash-daemon
   sleep 10s
   echo -ne "\r${COLOR_PRINT_GREEN}Stopping local daemon${END_COLOR_PRINT}"
   echo
@@ -1099,8 +1099,8 @@ function install_nodejs()
   echo -ne "${COLOR_PRINT_YELLOW}Installing Node.js${END_COLOR_PRINT}"
   cd "${XCASH_DPOPS_INSTALLATION_DIR}"
   wget -q ${NODEJS_URL}
-  tar -xf node*.tar.xz &>/dev/null
-  sudo rm node*.tar.xz &>/dev/null
+  tar -xf node*.tar.xz
+  sudo rm node*.tar.xz
   sudo chown -R "$USER":"$USER" ${NODEJS_DIR}
   echo -ne "\nexport PATH=${NODEJS_DIR}bin:" >> "${HOME}"/.profile 
   echo -ne '$PATH' >> "${HOME}"/.profile
@@ -1114,8 +1114,8 @@ function configure_npm()
   if [ "$EUID" -eq 0 ]; then
     echo -ne "${COLOR_PRINT_YELLOW}Configuring NPM For Root User${END_COLOR_PRINT}"
     source ~/.profile || true
-    npm config set user 0 &>/dev/null
-    npm config set unsafe-perm true &>/dev/null
+    npm config set user 0
+    npm config set unsafe-perm true
     echo -ne "\r${COLOR_PRINT_GREEN}Configuring NPM For Root User${END_COLOR_PRINT}"
     echo
   fi
@@ -1125,7 +1125,7 @@ function update_npm()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Updating NPM${END_COLOR_PRINT}"
   source ~/.profile || true
-  npm install -g npm &>/dev/null
+  npm install -g npm
   echo -ne "\r${COLOR_PRINT_GREEN}Updating NPM${END_COLOR_PRINT}"
   echo
 }
@@ -1133,7 +1133,7 @@ function update_npm()
 function install_npm_global_packages()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Installing Global NPM Packages${END_COLOR_PRINT}"
-  npm install -g @angular/cli@latest uglify-js &>/dev/null
+  npm install -g @angular/cli@latest uglify-js
   echo -ne "\r${COLOR_PRINT_GREEN}Installing Global NPM Packages${END_COLOR_PRINT}"
   echo
 }
@@ -1151,7 +1151,7 @@ function install_shared_delegates_website_npm_packages()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Updating node_modules${END_COLOR_PRINT}"
   cd "${SHARED_DELEGATES_WEBSITE_DIR}"
-  npm update --force &>/dev/null
+  npm update --force
   echo -ne "\r${COLOR_PRINT_GREEN}Updating node_modules${END_COLOR_PRINT}"
   echo
 }
@@ -1161,7 +1161,7 @@ function build_shared_delegates_website()
   echo -ne "${COLOR_PRINT_YELLOW}Building shared delegates website${END_COLOR_PRINT}"
   cd "${SHARED_DELEGATES_WEBSITE_DIR}"
   source ~/.profile || true
-  npm run build &>/dev/null
+  npm run build
   cd dist
   for f in *.js; do uglifyjs "$f" --compress --mangle --output "{$f}min"; rm "$f"; mv "{$f}min" "$f"; done
   if [ -d "$XCASH_DPOPS_SHARED_DELEGATE_FOLDER_DIR" ]; then

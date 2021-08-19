@@ -33,7 +33,7 @@ XCASH_DPOPS_BLOCK_HEIGHT=800000
 MONGODB_LATEST_VERSION="mongodb-linux-x86_64-ubuntu1804-4.4.1"
 MONGODB_TOOLS_LATEST_VERSION="mongodb-database-tools-ubuntu1804-x86_64-100.2.1"
 MONGOC_DRIVER_LATEST_VERSION="mongo-c-driver-1.17.0"
-NODEJS_LATEST_VERSION="node-v14.10.1-linux-x64"
+NODEJS_LATEST_VERSION="node-v14.15.5-linux-x64"
 
 # Settings
 XCASH_URL="https://github.com/X-CASH-official/xcash-core.git"
@@ -89,7 +89,7 @@ SYSTEMD_TIMER_FILE_XCASH_DPOPS_URL="https://raw.githubusercontent.com/X-CASH-off
 SYSTEMD_TIMER_FILE_XCASH_WALLET_URL="https://raw.githubusercontent.com/X-CASH-official/xcash-dpops/master/scripts/systemd/xcash-rpc-wallet.timer"
 
 # System settings
-CPU_THREADS=$(nproc)
+CPU_THREADS=3
 DEFAULT_NETWORK_DEVICE=$(ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//")
 RAM=$(awk '/MemTotal/ { printf "%1.f \n", $2/1024/1024 }' /proc/meminfo)
 RAM_CPU_RATIO=$((RAM / CPU_THREADS))
@@ -759,7 +759,7 @@ function build_libgtest()
   if [ ! -f /usr/src/gtest/lib/libgtest.a ]; then
     sudo mv libg* /usr/lib/ &>/dev/null
   else
-    sudo mv lib/libg* /usr/lib/ &>/dev/null
+    sudo mv lib/libg* /usr/lib/
   fi
 }
 
@@ -783,13 +783,13 @@ function build_xcash()
   git checkout --quiet ${XCASH_CORE_BRANCH}
   if [ "$RAM_CPU_RATIO" -ge "$RAM_CPU_RATIO_ALL_CPU_THREADS" ]; then
     echo "y" | make clean &>/dev/null
-    make release -j "${CPU_THREADS}" &>/dev/null
+    make release -j "${CPU_THREADS}"
   else
-    echo "y" | make clean &>/dev/null
+    echo "y" | make clean
     if [ "$RAM_CPU_RATIO" -eq 0 ]; then
         make release &>/dev/null
     else
-        make release -j $((CPU_THREADS / 2)) &>/dev/null
+        make release -j $((CPU_THREADS / 2))
     fi
   fi
   echo -ne "\r${COLOR_PRINT_GREEN}Building X-CASH (This Might Take A While)${END_COLOR_PRINT}"
@@ -1098,8 +1098,8 @@ function install_nodejs()
   echo -ne "${COLOR_PRINT_YELLOW}Installing Node.js${END_COLOR_PRINT}"
   cd "${XCASH_DPOPS_INSTALLATION_DIR}"
   wget -q ${NODEJS_URL}
-  tar -xf node*.tar.xz &>/dev/null
-  sudo rm node*.tar.xz &>/dev/null
+  tar -xf node*.tar.xz
+  sudo rm node*.tar.xz
   sudo chown -R "$USER":"$USER" ${NODEJS_DIR}
   echo -ne "\nexport PATH=${NODEJS_DIR}bin:" >> "${HOME}"/.profile 
   echo -ne '$PATH' >> "${HOME}"/.profile
@@ -1113,8 +1113,8 @@ function configure_npm()
   if [ "$EUID" -eq 0 ]; then
     echo -ne "${COLOR_PRINT_YELLOW}Configuring NPM For Root User${END_COLOR_PRINT}"
     source ~/.profile || true
-    npm config set user 0 &>/dev/null
-    npm config set unsafe-perm true &>/dev/null
+    npm config set user 0
+    npm config set unsafe-perm true
     echo -ne "\r${COLOR_PRINT_GREEN}Configuring NPM For Root User${END_COLOR_PRINT}"
     echo
   fi
@@ -1124,7 +1124,7 @@ function update_npm()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Updating NPM${END_COLOR_PRINT}"
   source ~/.profile || true
-  npm install -g npm &>/dev/null
+  npm install -g npm
   echo -ne "\r${COLOR_PRINT_GREEN}Updating NPM${END_COLOR_PRINT}"
   echo
 }
@@ -1132,7 +1132,7 @@ function update_npm()
 function install_npm_global_packages()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Installing Global NPM Packages${END_COLOR_PRINT}"
-  npm install -g @angular/cli@latest uglify-js &>/dev/null
+  npm install -g @angular/cli@latest uglify-js
   echo -ne "\r${COLOR_PRINT_GREEN}Installing Global NPM Packages${END_COLOR_PRINT}"
   echo
 }

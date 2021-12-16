@@ -740,7 +740,7 @@ function install_packages()
 {
     wait_for_package_manager
     echo -ne "${COLOR_PRINT_YELLOW}Installing Packages (This Might Take A While)${END_COLOR_PRINT}"
-    sudo apt install ${XCASH_DPOPS_PACKAGES} -y &>/dev/null
+    sudo apt install ${XCASH_DPOPS_PACKAGES} -y
     build_libgtest
     echo -ne "\r${COLOR_PRINT_GREEN}Installing Packages (This Might Take A While)${END_COLOR_PRINT}"
     echo
@@ -749,8 +749,8 @@ function install_packages()
 function build_libgtest()
 {
   cd /usr/src/gtest
-  sudo cmake . &>/dev/null
-  sudo make &>/dev/null
+  sudo cmake . 
+  sudo make
   if [ ! -f /usr/src/gtest/lib/libgtest.a ]; then
     sudo mv libg* /usr/lib/
   else
@@ -906,7 +906,7 @@ function install_mongoc_driver()
   mkdir cmake-build
   cd cmake-build
   sudo cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DCMAKE_BUILD_TYPE=Release ..
-  sudo make &>/dev/null
+  sudo make
   sudo make install
   sudo ldconfig
   echo -ne "\r${COLOR_PRINT_GREEN}Installing MongoC Driver${END_COLOR_PRINT}"
@@ -1059,9 +1059,9 @@ function import_xcash_wallet()
   sudo rm -f "${XCASH_DPOPS_INSTALLATION_DIR}"xcash-wallets/delegate-wallet* 2&> /dev/null
 
   echo -ne "${COLOR_PRINT_YELLOW}Starting local daemon${END_COLOR_PRINT}"
-  sudo systemctl stop xcash-daemon &>/dev/null
+  sudo systemctl stop xcash-daemon
   sleep 10s
-  sudo systemctl start xcash-daemon &>/dev/null
+  sudo systemctl start xcash-daemon
   sleep 20s
   echo -ne "\r${COLOR_PRINT_GREEN}Starting local daemon${END_COLOR_PRINT}"
   echo
@@ -1278,13 +1278,13 @@ function update_xcash()
     git pull --quiet
     if [ "$RAM_CPU_RATIO" -ge "$RAM_CPU_RATIO_ALL_CPU_THREADS" ]; then
       echo "y" | make clean &>/dev/null
-      make release -j "${CPU_THREADS}" &>/dev/null
+      make release -j "${CPU_THREADS}"
     else
       echo "y" | make clean &>/dev/null
       if [ "$RAM_CPU_RATIO" -eq 0 ]; then
           make release &>/dev/null
       else
-          make release -j $((CPU_THREADS / 2)) &>/dev/null
+          make release -j $((CPU_THREADS / 2))
       fi
     fi 
   fi
@@ -1305,14 +1305,14 @@ function update_xcash_dpops()
     git reset --hard HEAD --quiet
     git pull --quiet
     if [ "$RAM_CPU_RATIO" -ge "$RAM_CPU_RATIO_ALL_CPU_THREADS" ]; then
-      echo "y" | make clean &>/dev/null
-      make release -j "${CPU_THREADS}" &>/dev/null
+      echo "y" | make clean
+      make release -j "${CPU_THREADS}"
     else
-      echo "y" | make clean &>/dev/null
+      echo "y" | make clean
       if [ "$RAM_CPU_RATIO" -eq 0 ]; then
-          make release &>/dev/null
+          make release
       else
-          make release -j $((CPU_THREADS / 2)) &>/dev/null
+          make release -j $((CPU_THREADS / 2))
       fi
     fi
   fi
@@ -1332,9 +1332,9 @@ function update_shared_delegates_website()
   if [ "$data" == "0" ]; then
     git reset --hard HEAD --quiet
     git pull --quiet
-    npm update --force &>/dev/null
+    npm update --force
     source ~/.profile || true
-    npm run build &>/dev/null
+    npm run build
     cd dist
     for f in *.js; do uglifyjs "$f" --compress --mangle --output "{$f}min"; rm "$f"; mv "{$f}min" "$f"; done
     if [ -d "$XCASH_DPOPS_SHARED_DELEGATE_FOLDER_DIR" ]; then
@@ -1377,15 +1377,15 @@ function update_mongoc_driver()
   cd "${XCASH_DPOPS_INSTALLATION_DIR}"
   sudo rm -r "${MONGOC_DRIVER_DIR}"
   wget -q ${MONGOC_DRIVER_URL}
-  tar -xf mongo-c-driver-*.tar.gz &>/dev/null
-  sudo rm mongo-c-driver-*.tar.gz &>/dev/null
+  tar -xf mongo-c-driver-*.tar.gz
+  sudo rm mongo-c-driver-*.tar.gz
   sudo chown -R "$USER":"$USER" mongo-c-driver-*
   cd mongo-c-driver-*
   mkdir cmake-build
   cd cmake-build
   cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DCMAKE_BUILD_TYPE=Release .. &>/dev/null
   sudo make &>/dev/null
-  sudo make install &>/dev/null
+  sudo make install
   sudo ldconfig
   MONGOC_DRIVER_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongo-c-driver-*" -print)/
   echo -ne "\r${COLOR_PRINT_GREEN}Updating Mongo C Driver${END_COLOR_PRINT}"
@@ -1398,8 +1398,8 @@ function update_nodejs()
   sudo rm -r "${NODEJS_DIR}"  
   cd "${XCASH_DPOPS_INSTALLATION_DIR}"
   wget -q ${NODEJS_URL}
-  tar -xf node*.tar.xz &>/dev/null
-  sudo rm node*.tar.xz &>/dev/null
+  tar -xf node*.tar.xz
+  sudo rm node*.tar.xz
   NODEJS_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "node-*-linux-arm64" -print)/
   sudo chown -R "$USER":"$USER" ${NODEJS_DIR}
   sudo sed '/node-v/d' -i "${HOME}"/.profile

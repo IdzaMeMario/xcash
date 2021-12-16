@@ -30,10 +30,10 @@ DPOPS_MINIMUM_AMOUNT=0
 XCASH_DPOPS_BLOCK_HEIGHT=880000
 
 # Latest versions
-MONGODB_LATEST_VERSION="mongodb-linux-x86_64-ubuntu1804-4.4.1"
-MONGODB_TOOLS_LATEST_VERSION="mongodb-database-tools-ubuntu1804-x86_64-100.2.1"
+MONGODB_LATEST_VERSION="mongodb-linux-aarch64-ubuntu1804-4.4.1"
+MONGODB_TOOLS_LATEST_VERSION="mongodb-database-tools-ubuntu2004-arm64-100.2.1"
 MONGOC_DRIVER_LATEST_VERSION="mongo-c-driver-1.17.0"
-NODEJS_LATEST_VERSION="node-v14.10.1-linux-x64"
+NODEJS_LATEST_VERSION="node-v14.10.1-linux-arm64"
 
 # Settings
 XCASH_URL="https://github.com/X-CASH-official/xcash-core.git"
@@ -50,7 +50,7 @@ XCASH_DPOPS_SHARED_DELEGATE_FOLDER_DIR=""
 SHARED_DELEGATES_WEBSITE_URL="https://github.com/X-CASH-official/delegates-pool-website.git"
 SHARED_DELEGATES_WEBSITE_DIR=""
 SSH_PORT_NUMBER=22
-NODEJS_URL="https://nodejs.org/dist/${NODEJS_LATEST_VERSION:5:8}/${NODEJS_LATEST_VERSION}.tar.xz"
+NODEJS_URL="https://nodejs.org/dist/v14.10.1/node-v14.10.1-linux-arm64.tar.xz"
 NODEJS_DIR=""
 NODEJS_CURRENT_VERSION=""
 MONGODB_URL="https://fastdl.mongodb.org/linux/${MONGODB_LATEST_VERSION}.tgz"
@@ -60,7 +60,7 @@ MONGODB_CURRENT_VERSION=""
 MONGOC_DRIVER_URL="https://github.com/mongodb/mongo-c-driver/releases/download/${MONGOC_DRIVER_LATEST_VERSION:15}/${MONGOC_DRIVER_LATEST_VERSION}.tar.gz"
 MONGOC_DRIVER_DIR=""
 MONGOC_DRIVER_CURRENT_VERSION=""
-XCASH_DPOPS_PACKAGES="build-essential cmake pkg-config libboost-all-dev libssl-dev libzmq3-dev libunbound-dev libsodium-dev libminiupnpc-dev libunwind8-dev liblzma-dev libreadline6-dev libldns-dev libexpat1-dev libgtest-dev doxygen graphviz libpcsclite-dev git screen p7zip-full moreutils wget iptables"
+XCASH_DPOPS_PACKAGES="build-essential cmake pkg-config libboost-all-dev libssl-dev libzmq3-dev libunbound-dev libsodium-dev libminiupnpc-dev libunwind8-dev liblzma-dev libreadline6-dev libldns-dev libexpat1-dev libgtest-dev doxygen graphviz libpcsclite-dev git screen p7zip-full moreutils wget iptables python2"
 CURRENT_XCASH_WALLET_INFORMATION=""
 PUBLIC_ADDRESS=""
 
@@ -543,12 +543,12 @@ function get_current_xcash_wallet_data()
 function start_systemd_service_files()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Starting Systemd Service Files${END_COLOR_PRINT}"
-  sudo systemctl start mongodb &>/dev/null
-  sudo systemctl start xcash-daemon &>/dev/null
+  sudo systemctl start mongodb
+  sudo systemctl start xcash-daemon
   sleep 30s
-  sudo systemctl start xcash-rpc-wallet &>/dev/null
+  sudo systemctl start xcash-rpc-wallet
   sleep 30s
-  sudo systemctl start xcash-dpops &>/dev/null
+  sudo systemctl start xcash-dpops
   echo -ne "\r${COLOR_PRINT_GREEN}Starting Systemd Service Files${END_COLOR_PRINT}"
   echo
 }
@@ -731,7 +731,7 @@ function update_packages_list()
 {
     wait_for_package_manager
     echo -ne "${COLOR_PRINT_YELLOW}Updating Packages List${END_COLOR_PRINT}"
-    sudo apt update -y &>/dev/null
+    sudo apt update -y
     echo -ne "\r${COLOR_PRINT_GREEN}Updating Packages List${END_COLOR_PRINT}"
     echo
 }
@@ -748,13 +748,13 @@ function install_packages()
 
 function build_libgtest()
 {
-  cd /usr/src/gtest &>/dev/null
+  cd /usr/src/gtest
   sudo cmake . &>/dev/null
   sudo make &>/dev/null
   if [ ! -f /usr/src/gtest/lib/libgtest.a ]; then
-    sudo mv libg* /usr/lib/ &>/dev/null
+    sudo mv libg* /usr/lib/
   else
-    sudo mv lib/libg* /usr/lib/ &>/dev/null
+    sudo mv lib/libg* /usr/lib/
   fi
 }
 
@@ -773,21 +773,21 @@ function download_xcash()
 
 function build_xcash()
 {
-  echo -ne "${COLOR_PRINT_YELLOW}Building X-CASH (This Might Take A While)${END_COLOR_PRINT}"
+  echo -ne "${COLOR_PRINT_YELLOW}Building X-CASH (This May Take An Hour Or Longer)${END_COLOR_PRINT}"
   cd "${XCASH_DIR}"
   git checkout --quiet ${XCASH_CORE_BRANCH}
   if [ "$RAM_CPU_RATIO" -ge "$RAM_CPU_RATIO_ALL_CPU_THREADS" ]; then
-    echo "y" | make clean &>/dev/null
-    make release -j "${CPU_THREADS}" &>/dev/null
+    echo "y" | make clean
+    make release -j "${CPU_THREADS}"
   else
-    echo "y" | make clean &>/dev/null
+    echo "y" | make clean
     if [ "$RAM_CPU_RATIO" -eq 0 ]; then
-        make release &>/dev/null
+        make release
     else
-        make release -j $((CPU_THREADS / 2)) &>/dev/null
+        make release -j $((CPU_THREADS / 2))
     fi
   fi
-  echo -ne "\r${COLOR_PRINT_GREEN}Building X-CASH (This Might Take A While)${END_COLOR_PRINT}"
+  echo -ne "\r${COLOR_PRINT_GREEN}Building X-CASH (This May Take An Hour Or Longer)${END_COLOR_PRINT}"
   echo
 }
 
@@ -871,8 +871,8 @@ function install_mongodb()
   echo -ne "${COLOR_PRINT_YELLOW}Installing MongoDB${END_COLOR_PRINT}"
   cd "${XCASH_DPOPS_INSTALLATION_DIR}"
   wget -q ${MONGODB_URL}
-  tar -xf mongodb-linux-x86_64-*.tgz &>/dev/null
-  sudo rm mongodb-linux-x86_64-*.tgz &>/dev/null
+  tar -xf mongodb-linux-aarch64-*.tgz
+  sudo rm mongodb-linux-aarch64-*.tgz
   sudo chown -R "$USER":"$USER" ${MONGODB_DIR}
   echo -ne "\nexport PATH=${MONGODB_DIR}bin:" >> "${HOME}"/.profile 
   echo -ne '$PATH' >> "${HOME}"/.profile
@@ -884,10 +884,10 @@ function install_mongodb()
 function install_mongodb_tools()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Installing MongoDB Tools${END_COLOR_PRINT}"
-  cd "${XCASH_DPOPS_INSTALLATION_DIR}"mongodb-linux-x86_64-*/bin/
+  cd "${XCASH_DPOPS_INSTALLATION_DIR}"mongodb-linux-aarch64-*/bin/
   wget -q ${MONGODB_TOOLS_URL}
-  tar -xf mongodb-database-tools-*.tgz &>/dev/null
-  sudo rm mongodb-database-tools-*.tgz &>/dev/null
+  tar -xf mongodb-database-tools-*.tgz
+  sudo rm mongodb-database-tools-*.tgz
   cp -a mongodb-database-tools-*/bin/* ./
   sudo rm -rf mongodb-database-tools-*
   echo -ne "\r${COLOR_PRINT_GREEN}Installing MongoDB Tools${END_COLOR_PRINT}"
@@ -899,15 +899,15 @@ function install_mongoc_driver()
   echo -ne "${COLOR_PRINT_YELLOW}Installing MongoC Driver${END_COLOR_PRINT}"
   cd "${XCASH_DPOPS_INSTALLATION_DIR}"
   wget -q ${MONGOC_DRIVER_URL}
-  tar -xf mongo-c-driver-*.tar.gz &>/dev/null
-  sudo rm mongo-c-driver-*.tar.gz &>/dev/null
+  tar -xf mongo-c-driver-*.tar.gz
+  sudo rm mongo-c-driver-*.tar.gz
   sudo chown -R "$USER":"$USER" mongo-c-driver-*
   cd mongo-c-driver-*
-  mkdir cmake-build &>/dev/null
-  cd cmake-build &>/dev/null
-  sudo cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DCMAKE_BUILD_TYPE=Release .. &>/dev/null
-  sudo make -j "${CPU_THREADS}" &>/dev/null
-  sudo make install &>/dev/null
+  mkdir cmake-build
+  cd cmake-build
+  sudo cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DCMAKE_BUILD_TYPE=Release ..
+  sudo make &>/dev/null
+  sudo make install
   sudo ldconfig
   echo -ne "\r${COLOR_PRINT_GREEN}Installing MongoC Driver${END_COLOR_PRINT}"
   echo
@@ -928,14 +928,14 @@ function build_xcash_dpops()
   cd "${XCASH_DPOPS_DIR}"
   git checkout --quiet ${XCASH_DPOPS_BRANCH}
   if [ "$RAM_CPU_RATIO" -ge "$RAM_CPU_RATIO_ALL_CPU_THREADS" ]; then
-    echo "y" | make clean &>/dev/null
-    make release -j "${CPU_THREADS}" &>/dev/null
+    echo "y" | make clean
+     make release -j "${CPU_THREADS}"
   else
-    echo "y" | make clean &>/dev/null
+    echo "y" | make clean
     if [ "$RAM_CPU_RATIO" -eq 0 ]; then
-        make release &>/dev/null
+        make release
     else
-        make release -j $((CPU_THREADS / 2)) &>/dev/null
+        make release -j $((CPU_THREADS / 2))
     fi
   fi
   echo -ne "\r${COLOR_PRINT_GREEN}Building xcash-dpops${END_COLOR_PRINT}"
@@ -1030,9 +1030,9 @@ function create_xcash_wallet()
   sudo rm -f "${XCASH_DPOPS_INSTALLATION_DIR}"xcash-wallets/delegate-wallet* 2&> /dev/null
 
   echo -ne "${COLOR_PRINT_YELLOW}Starting local daemon${END_COLOR_PRINT}"
-  sudo systemctl stop xcash-daemon &>/dev/null
+  sudo systemctl stop xcash-daemon
   sleep 10s
-  sudo systemctl start xcash-daemon &>/dev/null
+  sudo systemctl start xcash-daemon
   sleep 20s
   echo -ne "\r${COLOR_PRINT_GREEN}Starting local daemon${END_COLOR_PRINT}"
   echo
@@ -1043,7 +1043,7 @@ function create_xcash_wallet()
   echo -e "${COLOR_PRINT_GREEN}Wallet Refresh Completed${END_COLOR_PRINT}"
 
   echo -ne "${COLOR_PRINT_YELLOW}Stopping local daemon${END_COLOR_PRINT}"
-  sudo systemctl stop xcash-daemon &>/dev/null
+  sudo systemctl stop xcash-daemon
   sleep 10s
   echo -ne "\r${COLOR_PRINT_GREEN}Stopping local daemon${END_COLOR_PRINT}"
   echo
@@ -1095,8 +1095,8 @@ function install_nodejs()
   echo -ne "${COLOR_PRINT_YELLOW}Installing Node.js${END_COLOR_PRINT}"
   cd "${XCASH_DPOPS_INSTALLATION_DIR}"
   wget -q ${NODEJS_URL}
-  tar -xf node*.tar.xz &>/dev/null
-  sudo rm node*.tar.xz &>/dev/null
+  tar -xf node*.tar.xz
+  sudo rm node*.tar.xz
   sudo chown -R "$USER":"$USER" ${NODEJS_DIR}
   echo -ne "\nexport PATH=${NODEJS_DIR}bin:" >> "${HOME}"/.profile 
   echo -ne '$PATH' >> "${HOME}"/.profile
@@ -1110,8 +1110,8 @@ function configure_npm()
   if [ "$EUID" -eq 0 ]; then
     echo -ne "${COLOR_PRINT_YELLOW}Configuring NPM For Root User${END_COLOR_PRINT}"
     source ~/.profile || true
-    npm config set user 0 &>/dev/null
-    npm config set unsafe-perm true &>/dev/null
+    npm config set user 0
+    npm config set unsafe-perm true
     echo -ne "\r${COLOR_PRINT_GREEN}Configuring NPM For Root User${END_COLOR_PRINT}"
     echo
   fi
@@ -1121,7 +1121,7 @@ function update_npm()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Updating NPM${END_COLOR_PRINT}"
   source ~/.profile || true
-  npm install -g npm &>/dev/null
+  npm install -g npm
   echo -ne "\r${COLOR_PRINT_GREEN}Updating NPM${END_COLOR_PRINT}"
   echo
 }
@@ -1129,7 +1129,7 @@ function update_npm()
 function install_npm_global_packages()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Installing Global NPM Packages${END_COLOR_PRINT}"
-  npm install -g @angular/cli@latest uglify-js &>/dev/null
+  npm install -g @angular/cli@latest uglify-js
   echo -ne "\r${COLOR_PRINT_GREEN}Installing Global NPM Packages${END_COLOR_PRINT}"
   echo
 }
@@ -1147,7 +1147,7 @@ function install_shared_delegates_website_npm_packages()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Updating node_modules${END_COLOR_PRINT}"
   cd "${SHARED_DELEGATES_WEBSITE_DIR}"
-  npm update --legacy-peer-deps &>/dev/null
+  npm update --force
   echo -ne "\r${COLOR_PRINT_GREEN}Updating node_modules${END_COLOR_PRINT}"
   echo
 }
@@ -1157,7 +1157,7 @@ function build_shared_delegates_website()
   echo -ne "${COLOR_PRINT_YELLOW}Building shared delegates website${END_COLOR_PRINT}"
   cd "${SHARED_DELEGATES_WEBSITE_DIR}"
   source ~/.profile || true
-  npm run build &>/dev/null
+  npm run build
   cd dist
   for f in *.js; do uglifyjs "$f" --compress --mangle --output "{$f}min"; rm "$f"; mv "{$f}min" "$f"; done
   if [ -d "$XCASH_DPOPS_SHARED_DELEGATE_FOLDER_DIR" ]; then
@@ -1205,9 +1205,9 @@ function get_installation_directory()
   XCASH_DPOPS_DIR=${XCASH_DPOPS_INSTALLATION_DIR}xcash-dpops/
   XCASH_DPOPS_SHARED_DELEGATE_FOLDER_DIR=${XCASH_DPOPS_DIR}delegates-pool-website/
   SHARED_DELEGATES_WEBSITE_DIR=${XCASH_DPOPS_INSTALLATION_DIR}delegates-pool-website/
-  NODEJS_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "node-*-linux-x64" -print)/
+  NODEJS_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "node-*-linux-arm64" -print)/
   MONGODB_INSTALLATION_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -path "*/data/db" -print)/
-  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-x86_64-ubuntu1804-*" -print)/
+  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu1804-*" -print)/
   MONGOC_DRIVER_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongo-c-driver-*" -print)/
   echo -ne "\r${COLOR_PRINT_GREEN}Getting Installation Directories${END_COLOR_PRINT}"
   echo
@@ -1242,8 +1242,8 @@ function get_installation_directory()
 function get_dependencies_current_version()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Getting Dependencies Current Versions${END_COLOR_PRINT}"
-  NODEJS_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "node-*-linux-x64" -exec basename {} \;)
-  MONGODB_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-x86_64-ubuntu1804-*" -exec basename {} \;)
+  NODEJS_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "node-*-linux-arm64" -exec basename {} \;)
+  MONGODB_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu1804-*" -exec basename {} \;)
   MONGOC_DRIVER_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongo-c-driver-*" -exec basename {} \;)
   echo -ne "\r${COLOR_PRINT_GREEN}Getting Dependencies Current Versions${END_COLOR_PRINT}"
   echo
@@ -1332,7 +1332,7 @@ function update_shared_delegates_website()
   if [ "$data" == "0" ]; then
     git reset --hard HEAD --quiet
     git pull --quiet
-    npm update --legacy-peer-deps &>/dev/null
+    npm update --force &>/dev/null
     source ~/.profile || true
     npm run build &>/dev/null
     cd dist
@@ -1353,15 +1353,15 @@ function update_mongodb()
   sudo rm -r "${MONGODB_DIR}"  
   cd "${XCASH_DPOPS_INSTALLATION_DIR}"
   wget -q ${MONGODB_URL}
-  tar -xf mongodb-linux-x86_64-*.tgz &>/dev/null
-  sudo rm mongodb-linux-x86_64-*.tgz &>/dev/null
-  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-x86_64-ubuntu1804-*" -print)/
+  tar -xf mongodb-linux-aarch64-*.tgz &>/dev/null
+  sudo rm mongodb-linux-aarch64-*.tgz &>/dev/null
+  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu1804-*" -print)/
   sudo chown -R "$USER":"$USER" ${MONGODB_DIR}
   update_systemd_service_files
   sudo bash -c "echo '${SYSTEMD_SERVICE_FILE_MONGODB}' > /lib/systemd/system/mongodb.service"
   sed_services 's/\r$//g' /lib/systemd/system/mongodb.service
   sudo systemctl daemon-reload
-  sudo sed '/mongodb-linux-x86_64-ubuntu1804-/d' -i "${HOME}"/.profile
+  sudo sed '/mongodb-linux-aarch64-ubuntu1804-/d' -i "${HOME}"/.profile
   sudo sed '/^[[:space:]]*$/d' -i "${HOME}"/.profile
   echo -ne "\nexport PATH=${MONGODB_DIR}bin:" >> "${HOME}"/.profile 
   echo -ne '$PATH' >> "${HOME}"/.profile
@@ -1384,7 +1384,7 @@ function update_mongoc_driver()
   mkdir cmake-build
   cd cmake-build
   cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DCMAKE_BUILD_TYPE=Release .. &>/dev/null
-  sudo make -j "${CPU_THREADS}" &>/dev/null
+  sudo make &>/dev/null
   sudo make install &>/dev/null
   sudo ldconfig
   MONGOC_DRIVER_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongo-c-driver-*" -print)/
@@ -1400,7 +1400,7 @@ function update_nodejs()
   wget -q ${NODEJS_URL}
   tar -xf node*.tar.xz &>/dev/null
   sudo rm node*.tar.xz &>/dev/null
-  NODEJS_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "node-*-linux-x64" -print)/
+  NODEJS_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "node-*-linux-arm64" -print)/
   sudo chown -R "$USER":"$USER" ${NODEJS_DIR}
   sudo sed '/node-v/d' -i "${HOME}"/.profile
   sudo sed '/PATH=\/bin:/d' -i "${HOME}"/.profile
@@ -1811,7 +1811,7 @@ function uninstall()
 
   # Update profile
   echo -ne "${COLOR_PRINT_YELLOW}Updating Profile${END_COLOR_PRINT}"
-  sudo sed '/mongodb-linux-x86_64-ubuntu1804-/d' -i "${HOME}"/.profile
+  sudo sed '/mongodb-linux-aarch64-ubuntu1804-/d' -i "${HOME}"/.profile
   sudo sed '/node-v/d' -i "${HOME}"/.profile
   sudo sed '/PATH=\/bin:/d' -i "${HOME}"/.profile
   sudo sed '/^[[:space:]]*$/d' -i "${HOME}"/.profile

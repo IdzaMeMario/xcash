@@ -508,9 +508,9 @@ function get_current_xcash_wallet_data()
   echo
   echo -ne "${COLOR_PRINT_YELLOW}Refreshing and Getting Current X-CASH Wallet Data${END_COLOR_PRINT}"
 
-  sudo systemctl stop xcash-daemon &>/dev/null
+  sudo systemctl stop xcash-daemon
   sleep 10s
-  sudo systemctl start xcash-daemon &>/dev/null
+  sudo systemctl start xcash-daemon
   sleep 20s
 
   screen -dmS XCASH_RPC_Wallet "${XCASH_DIR}"build/release/bin/xcash-wallet-rpc --wallet-file "${XCASH_WALLET_DIR}"delegate-wallet --password "${WALLET_PASSWORD}" --rpc-bind-port 18288 --confirm-external-bind --disable-rpc-login --trusted-daemon --log-file "${XCASH_LOGS_DIR}"xcash-wallet-rpc.log
@@ -532,7 +532,7 @@ function get_current_xcash_wallet_data()
   curl -s -X POST http://127.0.0.1:18288/json_rpc -d '{"jsonrpc":"2.0","id":"0","method":"stop_wallet"}' -H 'Content-Type: application/json' &>/dev/null
   sleep 10s
   
-  sudo systemctl stop xcash-daemon &>/dev/null
+  sudo systemctl stop xcash-daemon
   sleep 10s
   
   echo -ne "\r${COLOR_PRINT_GREEN}Refreshing and Getting Current X-CASH Wallet Data${END_COLOR_PRINT}"

@@ -1084,6 +1084,12 @@ function import_xcash_wallet()
 
 
 
+
+
+
+
+
+
 function install_nodejs()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Installing Node.js${END_COLOR_PRINT}"
@@ -1115,7 +1121,7 @@ function update_npm()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Updating NPM${END_COLOR_PRINT}"
   source ~/.profile || true
-  npm install -g npm
+  npm install -g npm &>/dev/null
   echo -ne "\r${COLOR_PRINT_GREEN}Updating NPM${END_COLOR_PRINT}"
   echo
 }
@@ -1123,7 +1129,7 @@ function update_npm()
 function install_npm_global_packages()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Installing Global NPM Packages${END_COLOR_PRINT}"
-  npm install -g @angular/cli@latest uglify-js
+  npm install -g @angular/cli@latest uglify-js &>/dev/null
   echo -ne "\r${COLOR_PRINT_GREEN}Installing Global NPM Packages${END_COLOR_PRINT}"
   echo
 }

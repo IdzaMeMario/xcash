@@ -30,10 +30,11 @@ DPOPS_MINIMUM_AMOUNT=0
 XCASH_DPOPS_BLOCK_HEIGHT=880000
 
 # Latest versions
-MONGODB_LATEST_VERSION="mongodb-linux-aarch64-ubuntu1804-4.4.1"
-MONGODB_TOOLS_LATEST_VERSION="mongodb-database-tools-ubuntu2004-arm64-100.2.1"
-MONGOC_DRIVER_LATEST_VERSION="mongo-c-driver-1.17.0"
-NODEJS_LATEST_VERSION="node-v14.10.1-linux-arm64"
+MONGODB_LATEST_VERSION="mongodb-linux-aarch64-ubuntu1804-5.0.5"
+MONGODB_TOOLS_LATEST_VERSION="mongodb-database-tools-ubuntu2004-arm64-100.5.1"
+MONGOC_DRIVER_LATEST_VERSION="mongo-c-driver-1.20.1"
+NODEJS_LATEST_VERSION="node-v16.10.0-linux-arm64"
+
 
 # Settings
 XCASH_URL="https://github.com/X-CASH-official/xcash-core.git"
@@ -1114,7 +1115,7 @@ function update_npm()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Updating NPM${END_COLOR_PRINT}"
   source ~/.profile || true
-  npm install -g npm &>/dev/null
+  npm install -g npm
   echo -ne "\r${COLOR_PRINT_GREEN}Updating NPM${END_COLOR_PRINT}"
   echo
 }
@@ -1122,7 +1123,7 @@ function update_npm()
 function install_npm_global_packages()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Installing Global NPM Packages${END_COLOR_PRINT}"
-  npm install -g @angular/cli@latest uglify-js &>/dev/null
+  npm install -g @angular/cli@latest uglify-js
   echo -ne "\r${COLOR_PRINT_GREEN}Installing Global NPM Packages${END_COLOR_PRINT}"
   echo
 }

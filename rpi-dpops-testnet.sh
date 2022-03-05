@@ -783,14 +783,14 @@ function build_xcash()
   cd "${XCASH_DIR}"
   git checkout --quiet ${XCASH_CORE_BRANCH}
   if [ "$RAM_CPU_RATIO" -ge "$RAM_CPU_RATIO_ALL_CPU_THREADS" ]; then
-    echo "y" | make clean &>/dev/null
-    make release -j "${CPU_THREADS}" &>/dev/null
+    echo "y" | make clean
+    make release -j "${CPU_THREADS}"
   else
-    echo "y" | make clean &>/dev/null
+    echo "y" | make clean
     if [ "$RAM_CPU_RATIO" -eq 0 ]; then
-        make release &>/dev/null
+        make release
     else
-        make release -j $((CPU_THREADS / 2)) &>/dev/null
+        make release -j $((CPU_THREADS / 2))
     fi
   fi
   echo -ne "\r${COLOR_PRINT_GREEN}Building X-CASH (This Might Take A While)${END_COLOR_PRINT}"
@@ -934,14 +934,14 @@ function build_xcash_dpops()
   cd "${XCASH_DPOPS_DIR}"
   git checkout --quiet ${XCASH_DPOPS_BRANCH}
   if [ "$RAM_CPU_RATIO" -ge "$RAM_CPU_RATIO_ALL_CPU_THREADS" ]; then
-    echo "y" | make clean &>/dev/null
-    make release -j "${CPU_THREADS}" &>/dev/null
+    echo "y" | make clean
+    make release -j "${CPU_THREADS}"
   else
-    echo "y" | make clean &>/dev/null
+    echo "y" | make clean
     if [ "$RAM_CPU_RATIO" -eq 0 ]; then
         make release &>/dev/null
     else
-        make release -j $((CPU_THREADS / 2)) &>/dev/null
+        make release -j $((CPU_THREADS / 2))
     fi
   fi
   echo -ne "\r${COLOR_PRINT_GREEN}Building xcash-dpops${END_COLOR_PRINT}"

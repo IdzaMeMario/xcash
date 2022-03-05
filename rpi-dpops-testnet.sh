@@ -581,10 +581,15 @@ function enable_service_files_at_startup()
   echo -ne "\r${COLOR_PRINT_GREEN}Enabling services to autostart on reboot${END_COLOR_PRINT}"
 }
 
+
+
+
+
+
 function check_if_solo_node()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Checking If Solo Node${END_COLOR_PRINT}"
-  data=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o  -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "delegates-pool-website" -print | wc -l)
+  data=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "delegates-pool-website" -print | wc -l)
   if [ "$data" -gt 0 ]; then
     SHARED_DELEGATE="YES"
   else
@@ -1256,7 +1261,7 @@ function get_dependencies_current_version()
   echo -ne "${COLOR_PRINT_YELLOW}Getting Dependencies Current Versions${END_COLOR_PRINT}"
   NODEJS_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "$NODEJS_LATEST_VERSION" -exec basename {} \;)
   MONGODB_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "$MONGODB_LATEST_VERSION" -exec basename {} \;)
-  MONGOC_DRIVER_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "$MONGOC_DRIVER_LATEST_VERSION -exec basename {} \;)
+  MONGOC_DRIVER_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "$MONGOC_DRIVER_LATEST_VERSION" -exec basename {} \;)
   echo -ne "\r${COLOR_PRINT_GREEN}Getting Dependencies Current Versions${END_COLOR_PRINT}"
   echo
 }

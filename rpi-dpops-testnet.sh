@@ -10,9 +10,10 @@ COLOR_PRINT_YELLOW="\033[1;33m"
 END_COLOR_PRINT="\033[0m"
 
 # Configuration settings
+MAIN_INSTALL_DIRECTORY="xcash-official"
 INSTALLATION_TYPE_SETTINGS=1
 INSTALLATION_TYPE=""
-XCASH_DPOPS_INSTALLATION_DIR="$HOME/xcash-official/"
+XCASH_DPOPS_INSTALLATION_DIR="$HOME/${MAIN_INSTALL_DIRECTORY}/"
 XCASH_BLOCKCHAIN_INSTALLATION_DIR="$HOME/.X-CASH/"
 MONGODB_INSTALLATION_DIR="/data/db/"
 SHARED_DELEGATE="YES"
@@ -32,8 +33,8 @@ XCASH_DPOPS_BLOCK_HEIGHT=880000
 # Latest versions
 MONGODB_LATEST_VERSION="mongodb-linux-aarch64-ubuntu2004-4.4.1"
 MONGODB_TOOLS_LATEST_VERSION="mongodb-database-tools-ubuntu2004-arm64-100.2.1"
-MONGOC_DRIVER_LATEST_VERSION="mongo-c-driver-1.20.1"
-NODEJS_LATEST_VERSION="node-v16.10.0-linux-arm64"
+MONGOC_DRIVER_LATEST_VERSION="mongo-c-driver-1.17.0"
+NODEJS_LATEST_VERSION="node-v14.10.1-linux-arm64"
 
 
 # Restore versions
@@ -62,7 +63,7 @@ XCASH_DPOPS_SHARED_DELEGATE_FOLDER_DIR=""
 SHARED_DELEGATES_WEBSITE_URL="https://github.com/X-CASH-official/delegates-pool-website.git"
 SHARED_DELEGATES_WEBSITE_DIR=""
 SSH_PORT_NUMBER=22
-NODEJS_URL="https://nodejs.org/dist/v16.10.0/node-v16.10.0-linux-arm64.tar.xz"
+NODEJS_URL="https://nodejs.org/dist/${NODEJS_LATEST_VERSION:5:8}/${NODEJS_LATEST_VERSION}.tar.xz"
 NODEJS_DIR=""
 NODEJS_CURRENT_VERSION=""
 MONGODB_URL="https://fastdl.mongodb.org/linux/${MONGODB_LATEST_VERSION}.tgz"
@@ -176,7 +177,7 @@ function get_installation_settings()
   # Check if xcash-dpops is already installed, if the user choose to install
   if [ "$INSTALLATION_TYPE_SETTINGS" -eq "1" ]; then
     echo -ne "${COLOR_PRINT_YELLOW}Checking if xcash-dpops is already installed${END_COLOR_PRINT}"
-    data=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "xcash-dpops" -print | wc -l)
+    data=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "$MAIN_INSTALL_DIRECTORY" -print | wc -l)
     if [ "$data" -ne "0" ]; then
       echo -e "\n${COLOR_PRINT_RED}xcash-dpops is already installed. You can either update or uninstall${END_COLOR_PRINT}"
       exit 1
@@ -187,7 +188,7 @@ function get_installation_settings()
 
   # Check if xcash-dpops is not installed, and if the user choose an option where xcash-dpops needed to be installed
   if [ "$INSTALLATION_TYPE_SETTINGS" -eq "2" ] || [ "$INSTALLATION_TYPE_SETTINGS" -eq "3" ] || [ "$INSTALLATION_TYPE_SETTINGS" -eq "4" ] || [ "$INSTALLATION_TYPE_SETTINGS" -eq "5" ] || [ "$INSTALLATION_TYPE_SETTINGS" -eq "10" ] || [ "$INSTALLATION_TYPE_SETTINGS" -eq "11" ] || [ "$INSTALLATION_TYPE_SETTINGS" -eq "12" ] || [ "$INSTALLATION_TYPE_SETTINGS" -eq "13" ] || [ "$INSTALLATION_TYPE_SETTINGS" -eq "14" ] || [ "$INSTALLATION_TYPE_SETTINGS" -eq "15" ] || [ "$INSTALLATION_TYPE_SETTINGS" -eq "16" ] || [ "$INSTALLATION_TYPE_SETTINGS" -eq "17" ] || [ "$INSTALLATION_TYPE_SETTINGS" -eq "20" ]; then
-    data=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "xcash-dpops" -print | wc -l)
+    data=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "$MAIN_INSTALL_DIRECTORY" -print | wc -l)
     if [ "$data" -eq "0" ]; then
       echo -e "\n${COLOR_PRINT_RED}This is an invalid option since xcash-dpops is not installed${END_COLOR_PRINT}"
       exit 1
@@ -200,7 +201,7 @@ function get_installation_settings()
 function get_xcash_dpops_installation_directory()
 {
   while
-    echo -ne "${COLOR_PRINT_YELLOW}Installation Directory, must be in the form of /directory/ (leave empty for default: $HOME/xcash-official/): ${END_COLOR_PRINT}"
+    echo -ne "${COLOR_PRINT_YELLOW}Installation Directory, must be in the form of /directory/ (leave empty for default: $HOME/$MAIN_INSTALL_DIRECTORY/): ${END_COLOR_PRINT}"
     read -r data    
     echo -ne "\r"
     echo
@@ -583,7 +584,7 @@ function enable_service_files_at_startup()
 function check_if_solo_node()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Checking If Solo Node${END_COLOR_PRINT}"
-  data=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "delegates-pool-website" -print | wc -l)
+  data=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o  -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "delegates-pool-website" -print | wc -l)
   if [ "$data" -gt 0 ]; then
     SHARED_DELEGATE="YES"
   else
@@ -876,8 +877,8 @@ function install_mongodb()
   echo -ne "${COLOR_PRINT_YELLOW}Installing MongoDB${END_COLOR_PRINT}"
   cd "${XCASH_DPOPS_INSTALLATION_DIR}"
   wget -q ${MONGODB_URL}
-  tar -xf mongodb-linux-aarch64-*.tgz
-  sudo rm mongodb-linux-aarch64-*.tgz
+  tar -xf mongodb-linux-aarch64-*.tgz &>/dev/null
+  sudo rm mongodb-linux-aarch64-*.tgz &>/dev/null
   sudo chown -R "$USER":"$USER" ${MONGODB_DIR}
   echo -ne "\nexport PATH=${MONGODB_DIR}bin:" >> "${HOME}"/.profile 
   echo -ne '$PATH' >> "${HOME}"/.profile
@@ -1206,7 +1207,7 @@ function install_shared_delegates_website()
 function get_installation_directory()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Getting Installation Directories${END_COLOR_PRINT}"
-  XCASH_DPOPS_INSTALLATION_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "xcash-dpops" -exec dirname {} \;)/
+  XCASH_DPOPS_INSTALLATION_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "$MAIN_INSTALL_DIRECTORY" -print)/
   XCASH_BLOCKCHAIN_INSTALLATION_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name ".X-CASH" -print)/
   WALLET_PASSWORD=$(cat /lib/systemd/system/xcash-rpc-wallet.service | awk '/password/ {print $5}')
   XCASH_DIR=${XCASH_DPOPS_INSTALLATION_DIR}xcash-core/
@@ -1216,10 +1217,10 @@ function get_installation_directory()
   XCASH_DPOPS_DIR=${XCASH_DPOPS_INSTALLATION_DIR}xcash-dpops/
   XCASH_DPOPS_SHARED_DELEGATE_FOLDER_DIR=${XCASH_DPOPS_DIR}delegates-pool-website/
   SHARED_DELEGATES_WEBSITE_DIR=${XCASH_DPOPS_INSTALLATION_DIR}delegates-pool-website/
-  NODEJS_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "node-*-linux-arm64" -print)/
+  NODEJS_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "$NODEJS_LATEST_VERSION" -print)/
   MONGODB_INSTALLATION_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -path "*/data/db" -print)/
-  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu1804-*" -print)/
-  MONGOC_DRIVER_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongo-c-driver-*" -print)/
+  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "$MONGODB_LATEST_VERSION" -print)/
+  MONGOC_DRIVER_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "$MONGOC_DRIVER_LATEST_VERSION" -print)/
   echo -ne "\r${COLOR_PRINT_GREEN}Getting Installation Directories${END_COLOR_PRINT}"
   echo
 
@@ -1253,9 +1254,9 @@ function get_installation_directory()
 function get_dependencies_current_version()
 {
   echo -ne "${COLOR_PRINT_YELLOW}Getting Dependencies Current Versions${END_COLOR_PRINT}"
-  NODEJS_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "node-*-linux-arm64" -exec basename {} \;)
-  MONGODB_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-aarch64-ubuntu1804-*" -exec basename {} \;)
-  MONGOC_DRIVER_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongo-c-driver-*" -exec basename {} \;)
+  NODEJS_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "$NODEJS_LATEST_VERSION" -exec basename {} \;)
+  MONGODB_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "$MONGODB_LATEST_VERSION" -exec basename {} \;)
+  MONGOC_DRIVER_CURRENT_VERSION=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "$MONGOC_DRIVER_LATEST_VERSION -exec basename {} \;)
   echo -ne "\r${COLOR_PRINT_GREEN}Getting Dependencies Current Versions${END_COLOR_PRINT}"
   echo
 }
@@ -1366,7 +1367,7 @@ function update_mongodb()
   wget -q ${MONGODB_URL}
   tar -xf mongodb-linux-x86_64-*.tgz &>/dev/null
   sudo rm mongodb-linux-x86_64-*.tgz &>/dev/null
-  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongodb-linux-x86_64-ubuntu1804-*" -print)/
+  MONGODB_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "$MONGODB_LATEST_VERSION" -print)/
   sudo chown -R "$USER":"$USER" ${MONGODB_DIR}
   update_systemd_service_files
   sudo bash -c "echo '${SYSTEMD_SERVICE_FILE_MONGODB}' > /lib/systemd/system/mongodb.service"
@@ -1398,7 +1399,7 @@ function update_mongoc_driver()
   sudo make -j "${CPU_THREADS}" &>/dev/null
   sudo make install &>/dev/null
   sudo ldconfig
-  MONGOC_DRIVER_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "mongo-c-driver-*" -print)/
+  MONGOC_DRIVER_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "$MONGOC_DRIVER_LATEST_VERSION" -print)/
   echo -ne "\r${COLOR_PRINT_GREEN}Updating Mongo C Driver${END_COLOR_PRINT}"
   echo
 }
@@ -1411,7 +1412,7 @@ function update_nodejs()
   wget -q ${NODEJS_URL}
   tar -xf node*.tar.xz
   sudo rm node*.tar.xz
-  NODEJS_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "node-*-linux-arm64" -print)/
+  NODEJS_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -path "*/$MAIN_INSTALL_DIRECTORY/*" -type d -name "$NODEJS_LATEST_VERSION" -print)/
   sudo chown -R "$USER":"$USER" ${NODEJS_DIR}
   sudo sed '/node-v/d' -i "${HOME}"/.profile
   sudo sed '/PATH=\/bin:/d' -i "${HOME}"/.profile
@@ -1736,7 +1737,7 @@ function quick_update()
   echo
   echo
 
-  XCASH_DPOPS_INSTALLATION_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "xcash-dpops" -exec dirname {} \;)/
+  XCASH_DPOPS_INSTALLATION_DIR=$(sudo find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /var -prune -o -type d -name "$MAIN_INSTALL_DIRECTORY" -print)/
   XCASH_DPOPS_DIR=${XCASH_DPOPS_INSTALLATION_DIR}xcash-dpops/
 
   update_xcash_dpops
@@ -1822,7 +1823,7 @@ function uninstall()
 
   # Update profile
   echo -ne "${COLOR_PRINT_YELLOW}Updating Profile${END_COLOR_PRINT}"
-  sudo sed '/mongodb-linux-aarch64-ubuntu1804-/d' -i "${HOME}"/.profile
+  sudo sed '/mongodb-linux-aarch64-ubuntu2004-/d' -i "${HOME}"/.profile
   sudo sed '/node-v/d' -i "${HOME}"/.profile
   sudo sed '/PATH=\/bin:/d' -i "${HOME}"/.profile
   sudo sed '/^[[:space:]]*$/d' -i "${HOME}"/.profile
@@ -1883,7 +1884,7 @@ function install_node()
   echo
 
   # Create files
-  touch $HOME/xcash-official/systemdpid/xcash-daemon.pid
+  touch $HOME/$MAIN_INSTALL_DIRECTORY/systemdpid/xcash-daemon.pid
 
   # Update the package list
   update_packages_list
@@ -2577,7 +2578,7 @@ elif [ "$INSTALLATION_TYPE_SETTINGS" -eq "4" ]; then
   uninstall
 elif [ "$INSTALLATION_TYPE_SETTINGS" -eq "5" ]; then
   restore_tools
-elif [ "$INSTALLATION_TYPE_SETTINGS" -eq "5" ]; then
+elif [ "$INSTALLATION_TYPE_SETTINGS" -eq "6" ]; then
   install_node
 elif [ "$INSTALLATION_TYPE_SETTINGS" -eq "7" ]; then
   update_node
